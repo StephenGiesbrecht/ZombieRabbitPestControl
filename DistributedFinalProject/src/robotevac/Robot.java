@@ -1,8 +1,8 @@
 package robotevac;
 
 public class Robot {
-	private EvacPoint location;
-	private boolean exited;
+	private EvacPoint 	location;
+	private boolean 	exited;
 	
 	public Robot(double x, double y) {
 		location = new EvacPoint(x, y);

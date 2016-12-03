@@ -1,17 +1,19 @@
 package robotevac;
 
 public class EvacCircle {
-	private EvacPoint exit;
-	private double radius;
+	private EvacPoint 	exit;
+	private int 		radius = 1;
 	
-	public EvacCircle(double ex, double ey, double r) {
+	public EvacCircle(double ex, double ey) {
 		exit = new EvacPoint(ex, ey);
-		radius = r;
 	}
 	
-	public EvacCircle(EvacPoint e, double r) {
+	public EvacCircle(EvacPoint e) {
 		exit = e;
-		radius = r;
+	}
+	
+	public EvacCircle() {
+		// TODO make random exit on circumference
 	}
 	
 	public EvacPoint getExit() {
