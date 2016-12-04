@@ -38,13 +38,20 @@ public class EvacCircle {
 		return exit.equals(new EvacPoint(x, y));
 	}
 
-	public static boolean isInside(EvacPoint p) {
-		return ((p.getX() * p.getX()) + (p.getY() * p.getY()) <= 1 + EPSILON);
+	public boolean isInside(EvacPoint p) {
+		return ((p.getX() * p.getX()) + (p.getY() * p.getY()) <= (radius * radius) + EPSILON);
 	}
 
-	public static boolean isOnCircumference(EvacPoint p) {
+	public boolean isOnCircumference(EvacPoint p) {
 		double dist = (p.getX() * p.getX()) + (p.getY() * p.getY());
-		return (dist + EPSILON >= 1 && dist - EPSILON <= 1);
+		return (dist + EPSILON >= radius * radius && dist - EPSILON <= radius * radius);
+	}
+
+	public EvacPoint randomPointInside() {
+		Random r = new Random();
+		double centreDist = r.nextDouble() * radius;
+		double rads = Math.toRadians(r.nextInt(360));
+		return new EvacPoint(centreDist * Math.sin(rads), centreDist * Math.cos(rads));
 	}
 
 }
