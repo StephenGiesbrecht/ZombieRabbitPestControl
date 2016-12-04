@@ -1,16 +1,19 @@
 package robotevac;
 
-import robotevac.EvacProgram.ExitModes;
-import robotevac.EvacProgram.RobotModes;
+import robotevac.EvacProgram.ExitMode;
+import robotevac.EvacProgram.RobotMode;
 
 public abstract class EvacView {
-	private Robot 		r1;
-	private Robot 		r2;
+	private Robot 		robot1;
+	private Robot 		robot2;
 	private EvacCircle 	circle;
 	
-	public EvacView(Robot one, Robot two, EvacCircle c) {
-		r1 = one;
-		r2 = two;
+	public void initRobots(Robot r1, Robot r2) {
+		robot1 = r1;
+		robot2 = r2;
+	}
+	
+	public void initCircle(EvacCircle c) {
 		circle = c;
 	}
 	
@@ -18,14 +21,14 @@ public abstract class EvacView {
 	//the option to exit
 	//returns a EvacProgram RobotModes enum declaring which of the three options they
 	//want to do, or declaring that they want to exit
-	public abstract RobotModes getRobotMode();
+	public abstract RobotMode getRobotMode();
 
 	//should ask the user whether they want to get the average time or the worst case
 	//for the given robot set-up, or whether they want to go back to the previous choice,
 	//or whether they want to exit the program entirely
 	//returns a EvacProgram ExitModes enum declaring whether they want average time, worst case,
 	//back to previous menu or exit
-	public abstract ExitModes getExitMode();
+	public abstract ExitMode getExitMode(RobotMode r);
 	
 	//should display the robots moving to the exit according to the algorithm being run
 	public abstract void showEvac();

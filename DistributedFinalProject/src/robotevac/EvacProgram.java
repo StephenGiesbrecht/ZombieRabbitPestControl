@@ -1,49 +1,79 @@
 package robotevac;
 
 public class EvacProgram {
-	public static enum RobotModes { BOTH_CENTER, ONE_RANDOM, BOTH_RANDOM, EXIT };
-	public static enum ExitModes { RANDOM, WORST_CASE, BACK, EXIT };
+	public static enum RobotMode { BOTH_CENTER, ONE_RANDOM, BOTH_RANDOM, EXIT };
+	public static enum ExitMode { RANDOM, WORST_CASE, BACK, EXIT };
 	private Robot 		robot1;
 	private Robot 		robot2;
 	private EvacCircle 	circle;
 	private EvacView 	view;
-	private RobotModes 	currRobotMode;
-	private ExitModes 	currExitMode;
+	private RobotMode 	currRobotMode;
+	private ExitMode 	currExitMode;
 	
 	public EvacProgram() {
-		// TODO initialize view here
+		view = new EvacTextView();
 	}
 	
-	private void initBots(RobotModes r) {
+	private void initRobots(RobotMode r) {
 		currRobotMode = r;
-		// TODO make sure random robots are within circle
 		switch (r) {
 			case BOTH_CENTER: {
 				robot1 = new Robot(0, 0);
 				robot2 = new Robot(0, 0);
+				break;
 			}
 			case ONE_RANDOM: {
 				robot1 = new Robot(0, 0);
-				robot2 = new Robot(Math.random(), Math.random());
+				while (true) {
+					double x = 2 * Math.random() - 1;
+					double y = 2 * Math.random() - 1;
+					EvacPoint p = new EvacPoint(x, y);
+					if (EvacCircle.isInside(p)) {
+						robot2 = new Robot(p);
+						break;
+					}
+				}
+				break;
 			}
 			case BOTH_RANDOM: {
-				robot1 = new Robot(Math.random(), Math.random());
-				robot2 = new Robot(Math.random(), Math.random());
+				while (true) {
+					double x = 2 * Math.random() - 1;
+					double y = 2 * Math.random() - 1;
+					EvacPoint p = new EvacPoint(x, y);
+					if (EvacCircle.isInside(p)) {
+						robot1 = new Robot(p);
+						break;
+					}
+				}
+				while (true) {
+					double x = 2 * Math.random() - 1;
+					double y = 2 * Math.random() - 1;
+					EvacPoint p = new EvacPoint(x, y);
+					if (EvacCircle.isInside(p) && !p.equals(robot1.getLocation())) {
+						robot2 = new Robot(p);
+						break;
+					}
+				}
+				break;
 			}
 		}
+		view.initRobots(robot1, robot2);
 	}
 
-	private void initCircle(ExitModes e) {
+	private void initCircle(ExitMode e) {
 		currExitMode = e;
 		switch (e) {
 			case RANDOM: {
 				circle = new EvacCircle();
+				break;
 			}
 			case WORST_CASE: {
 				// TODO make sure exit is on circumference and is worst case
 				circle = new EvacCircle(Math.random(), Math.random());
+				break;
 			}
 		}
+		view.initCircle(circle);
 	}
 
 	private double runAlgorithm() {
@@ -55,40 +85,44 @@ public class EvacProgram {
 	public void run() {
 		boolean exitMain = false;
 		while (!exitMain) {
-			RobotModes robotMode = view.getRobotMode();
-			if (robotMode != RobotModes.EXIT) {
-				initBots(robotMode);
+			RobotMode robotMode = view.getRobotMode();
+			if (robotMode != RobotMode.EXIT) {
+				initRobots(robotMode);
 			}
 			else {
 				break;
 			}
 			boolean exitSub = false;
 			while (!exitSub) {
-				ExitModes exitMode = view.getExitMode();
+				ExitMode exitMode = view.getExitMode(currRobotMode);
 				switch (exitMode) {
 					case RANDOM: {
 						int num = view.getNumOfExperiements();
 						double sum = 0;
 						for (int i = 0; i < num; i++) {
 							// TODO do we draw each experiment?
-							// TODO do we make new random robots each time?
+							initRobots(currRobotMode);
 							initCircle(exitMode);
 							sum += runAlgorithm();
 						}
 						view.showAvgTime(sum / num);
+						break;
 					}
 					case WORST_CASE: {
 						initCircle(exitMode);
 						double time = runAlgorithm();
 						view.showEvac();
 						view.showTime(time);
+						break;
 					}
 					case BACK: {
 						exitSub = true;
+						break;
 					}
 					case EXIT: {
 						exitSub = true;
 						exitMain = true;
+						break;
 					}
 				}
 				if (exitSub) break;

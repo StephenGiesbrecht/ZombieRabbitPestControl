@@ -13,7 +13,17 @@ public class EvacCircle {
 	}
 	
 	public EvacCircle() {
-		// TODO make random exit on circumference
+		double x = 0;
+		double y = 0;
+		while (true) {
+			x = 2 * Math.random() - 1;
+			y = 2 * Math.random() - 1;
+			EvacPoint e = new EvacPoint(x, y);
+			if (isInside(e)) {
+				exit = e;
+				break;
+			}
+		}
 	}
 	
 	public EvacPoint getExit() {
@@ -32,12 +42,12 @@ public class EvacCircle {
 		return exit.equals(new EvacPoint(x, y));
 	}
 	
-	public boolean isInside(EvacPoint p) {
-		return ((p.getX() * p.getX()) + (p.getY() * p.getY()) <= radius * radius);
+	public static boolean isInside(EvacPoint p) {
+		return ((p.getX() * p.getX()) + (p.getY() * p.getY()) <= 1);
 	}
 	
-	public boolean isOnCircumference(EvacPoint p) {
-		return ((p.getX() * p.getX()) + (p.getY() * p.getY()) == radius * radius);
+	public static boolean isOnCircumference(EvacPoint p) {
+		return ((p.getX() * p.getX()) + (p.getY() * p.getY()) == 1);
 	}
 
 }
