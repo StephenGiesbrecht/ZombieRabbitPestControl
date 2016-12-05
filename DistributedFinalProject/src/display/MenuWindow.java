@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
+import javax.swing.event.EventListenerList;
 
 import robotevac.ExitMode;
 import robotevac.RobotMode;
@@ -17,18 +18,10 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 	private MainMenuPanel mainMenu;
 	private SubmenuPanel subMenu;
 	private SimulationSettings selectedSettings = new SimulationSettings();
+	protected EventListenerList listenerList = new EventListenerList();
 
 	public MenuWindow() {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		Container frame = getContentPane();
-		frame.setLayout(new CardLayout());
-		mainMenu = new MainMenuPanel();
-		subMenu = new SubmenuPanel();
-		frame.add(mainMenu, "Main Menu");
-		frame.add(subMenu, "Submenu");
-		initListeners();
-		pack();
-		setVisible(true);
+
 	}
 
 	private void initListeners() {
@@ -68,7 +61,7 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 					selectedSettings.setExitMode(ExitMode.WORST_CASE);
 					break;
 				}
-				// TODO: Signal to main control that choices are made
+				fireActionEvent();
 			}
 		};
 		subMenu.addSelectionListener(subListener);
@@ -80,8 +73,40 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 
-	public static void main(String[] args) {
-		MenuWindow w = new MenuWindow();
+	// This is a bit of a hack, using ActionEvent improperly to avoid defining
+	// new event and listener classes for this single use
+	public void addActionListener(ActionListener l) {
+		this.listenerList.add(ActionListener.class, l);
 	}
 
+	public void removeActionListener(ActionListener l) {
+		this.listenerList.remove(ActionListener.class, l);
+	}
+
+	protected void fireActionEvent() {
+		Object[] listeners = listenerList.getListenerList();
+		for (int i = listeners.length - 2; i >= 0; i -= 2) {
+			if (listeners[i] == ActionListener.class) {
+				ActionEvent e = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, SETTINGS_PICKED);
+				((ActionListener) listeners[i + 1]).actionPerformed(e);
+			}
+		}
+	}
+
+	public SimulationSettings getSimulationSettings() {
+		return selectedSettings;
+	}
+
+	public void createAndShow() {
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		Container frame = getContentPane();
+		frame.setLayout(new CardLayout());
+		mainMenu = new MainMenuPanel();
+		subMenu = new SubmenuPanel();
+		frame.add(mainMenu, "Main Menu");
+		frame.add(subMenu, "Submenu");
+		initListeners();
+		pack();
+		setVisible(true);
+	}
 }
