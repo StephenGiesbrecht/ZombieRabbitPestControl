@@ -1,7 +1,5 @@
 package robotevac;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
@@ -17,14 +15,6 @@ public class MainControl {
 
 	public void run() throws InvocationTargetException, InterruptedException {
 		menu = new MenuWindow();
-		menu.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				settings = menu.getSimulationSettings();
-				menu.dispose();
-				System.out.println("Settings retrieved");
-			}
-		});
 
 		// If menu is closed by user, terminate program
 		menu.addWindowListener(new WindowAdapter() {
@@ -41,10 +31,10 @@ public class MainControl {
 			}
 		});
 
-		while (settings == null) {
-			Thread.sleep(500);
-		}
-		System.out.println("Test");
+		settings = menu.getSimulationSettings();
+		System.out.println(settings.getRobotMode());
+		System.out.println(settings.getExitMode());
+		menu.dispose();
 	}
 
 	public static void main(String args[]) throws InvocationTargetException, InterruptedException {

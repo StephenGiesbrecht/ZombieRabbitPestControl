@@ -61,7 +61,6 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 					selectedSettings.setExitMode(ExitMode.WORST_CASE);
 					break;
 				}
-				fireActionEvent();
 			}
 		};
 		subMenu.addSelectionListener(subListener);
@@ -73,27 +72,13 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 
-	// This is a bit of a hack, using ActionEvent improperly to avoid defining
-	// new event and listener classes for this single use
-	public void addActionListener(ActionListener l) {
-		this.listenerList.add(ActionListener.class, l);
-	}
-
-	public void removeActionListener(ActionListener l) {
-		this.listenerList.remove(ActionListener.class, l);
-	}
-
-	protected void fireActionEvent() {
-		Object[] listeners = listenerList.getListenerList();
-		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == ActionListener.class) {
-				ActionEvent e = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, SETTINGS_PICKED);
-				((ActionListener) listeners[i + 1]).actionPerformed(e);
+	public SimulationSettings getSimulationSettings() {
+		while (selectedSettings.getRobotMode() == null || selectedSettings.getExitMode() == null) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
 			}
 		}
-	}
-
-	public SimulationSettings getSimulationSettings() {
 		return selectedSettings;
 	}
 
