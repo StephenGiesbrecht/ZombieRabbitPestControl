@@ -1,7 +1,5 @@
 package robotevac;
 
-import robotevac.EvacProgram.ExitMode;
-import robotevac.EvacProgram.RobotMode;
 
 public abstract class EvacView {
 	private Robot 		robot1;

@@ -1,7 +1,5 @@
 package robotevac;
 
-import robotevac.EvacProgram.ExitMode;
-import robotevac.EvacProgram.RobotMode;
 import java.util.Scanner;
 
 public class EvacTextView extends EvacView {

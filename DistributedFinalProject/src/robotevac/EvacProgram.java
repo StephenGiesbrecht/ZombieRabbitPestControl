@@ -1,8 +1,6 @@
 package robotevac;
 
 public class EvacProgram {
-	public static enum RobotMode { BOTH_CENTER, ONE_RANDOM, BOTH_RANDOM, EXIT };
-	public static enum ExitMode { RANDOM, WORST_CASE, BACK, EXIT };
 	private Robot 		robot1;
 	private Robot 		robot2;
 	private EvacCircle 	circle;
