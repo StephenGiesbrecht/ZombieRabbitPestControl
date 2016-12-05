@@ -32,11 +32,14 @@ public class MainMenuPanel extends JPanel implements MenuActionCommands {
 		add(exit);
 	}
 
-	public void addActionListener(ActionListener l) {
+	public void addExitListener(ActionListener l) {
+		exit.addActionListener(l);
+	}
+
+	public void addSelectionListener(ActionListener l) {
 		bothCenter.addActionListener(l);
 		oneRandom.addActionListener(l);
 		bothRandom.addActionListener(l);
-		exit.addActionListener(l);
 	}
 
 }

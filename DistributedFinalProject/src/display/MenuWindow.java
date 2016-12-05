@@ -27,27 +27,56 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 		subMenu = new JPanel();
 		frame.add(mainMenu, "Main Menu");
 		frame.add(subMenu, "Submenu");
-		mainMenu.addActionListener(this);
+		initListeners();
 		pack();
 		setVisible(true);
 	}
 
+	private void initListeners() {
+		ActionListener mainListener = new ActionListener() {
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				String command = e.getActionCommand();
+
+				if (command.equals(BOTH_CENTER)) {
+					rMode = RobotMode.BOTH_CENTER;
+				} else if (command.equals(ONE_RANDOM)) {
+					rMode = RobotMode.ONE_RANDOM;
+				} else if (command.equals(BOTH_RANDOM)) {
+					rMode = RobotMode.BOTH_RANDOM;
+				}
+				((CardLayout) getContentPane().getLayout()).show(getContentPane(), "Submenu");
+			}
+		};
+		mainMenu.addSelectionListener(mainListener);
+		mainMenu.addExitListener(this);
+
+		ActionListener subListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String command = e.getActionCommand();
+
+				switch (command) {
+				case BACK:
+					rMode = null;
+					((CardLayout) getContentPane().getLayout()).show(getContentPane(), "Main Menu");
+					return;
+
+				case RANDOM_EXIT:
+					eMode = ExitMode.RANDOM;
+					break;
+				case WORST_CASE:
+					eMode = ExitMode.WORST_CASE;
+				}
+				// TODO: Signal to main control that choices are made
+			}
+		};
+		// TODO: Attach listeners to submenu
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
-
-		if (command.equals(EXIT)) {
-			dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-		}
-
-		if (command.equals(BOTH_CENTER)) {
-			rMode = RobotMode.BOTH_CENTER;
-		} else if (command.equals(ONE_RANDOM)) {
-			rMode = RobotMode.ONE_RANDOM;
-		} else if (command.equals(BOTH_RANDOM)) {
-			rMode = RobotMode.BOTH_RANDOM;
-		}
-		((CardLayout) getContentPane().getLayout()).show(getContentPane(), "Submenu");
+		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 
 	public static void main(String[] args) {
