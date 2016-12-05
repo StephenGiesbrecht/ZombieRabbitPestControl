@@ -17,9 +17,7 @@ public class EvacCircle {
 	}
 
 	public EvacCircle() {
-		Random r = new Random();
-		double rads = Math.toRadians(r.nextInt(360));
-		exit = new EvacPoint(radius * Math.sin(rads), radius * Math.cos(rads));
+		exit = randomPointOnCircumference();
 	}
 
 	public EvacPoint getExit() {
@@ -49,9 +47,15 @@ public class EvacCircle {
 
 	public EvacPoint randomPointInside() {
 		Random r = new Random();
-		double centreDist = r.nextDouble() * radius;
-		double rads = Math.toRadians(r.nextInt(360));
-		return new EvacPoint(centreDist * Math.sin(rads), centreDist * Math.cos(rads));
+		double centreDist = Math.sqrt(r.nextDouble()) * radius;
+		double rads = 2 * Math.PI * r.nextDouble();
+		return new EvacPoint(centreDist * Math.sin(rads), centreDist * -Math.cos(rads));
+	}
+
+	public EvacPoint randomPointOnCircumference() {
+		Random r = new Random();
+		double rads = 2 * Math.PI * r.nextDouble();
+		return new EvacPoint(radius * Math.sin(rads), radius * -Math.cos(rads));
 	}
 
 }
