@@ -73,9 +73,9 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 	}
 
 	public SimulationSettings getSimulationSettings() {
-		while (selectedSettings.getRobotMode() == null || selectedSettings.getExitMode() == null) {
+		while (!selectedSettings.isComplete()) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(250);
 			} catch (InterruptedException e) {
 			}
 		}

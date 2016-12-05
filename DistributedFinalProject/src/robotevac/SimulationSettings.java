@@ -18,6 +18,10 @@ public class SimulationSettings {
 		return eMode;
 	}
 
+	public boolean isComplete() {
+		return (rMode != null && eMode != null);
+	}
+
 	public RobotMode getRobotMode() {
 		return rMode;
 	}
