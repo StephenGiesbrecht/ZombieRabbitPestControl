@@ -40,6 +40,11 @@ public class MainControl {
 				menu.createAndShow();
 			}
 		});
+
+		while (settings == null) {
+			Thread.sleep(500);
+		}
+		System.out.println("Test");
 	}
 
 	public static void main(String args[]) throws InvocationTargetException, InterruptedException {
