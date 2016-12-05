@@ -7,24 +7,23 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import robotevac.ExitMode;
 import robotevac.RobotMode;
+import robotevac.SimulationSettings;
 
 @SuppressWarnings("serial")
 public class MenuWindow extends JFrame implements ActionListener, MenuActionCommands {
 	private MainMenuPanel mainMenu;
-	private JPanel subMenu;
-	private RobotMode rMode = null;
-	private ExitMode eMode = null;
+	private SubmenuPanel subMenu;
+	private SimulationSettings selectedSettings = new SimulationSettings();
 
 	public MenuWindow() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Container frame = getContentPane();
 		frame.setLayout(new CardLayout());
 		mainMenu = new MainMenuPanel();
-		subMenu = new JPanel();
+		subMenu = new SubmenuPanel();
 		frame.add(mainMenu, "Main Menu");
 		frame.add(subMenu, "Submenu");
 		initListeners();
@@ -39,11 +38,11 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 				String command = e.getActionCommand();
 
 				if (command.equals(BOTH_CENTER)) {
-					rMode = RobotMode.BOTH_CENTER;
+					selectedSettings.setRobotMode(RobotMode.BOTH_CENTER);
 				} else if (command.equals(ONE_RANDOM)) {
-					rMode = RobotMode.ONE_RANDOM;
+					selectedSettings.setRobotMode(RobotMode.ONE_RANDOM);
 				} else if (command.equals(BOTH_RANDOM)) {
-					rMode = RobotMode.BOTH_RANDOM;
+					selectedSettings.setRobotMode(RobotMode.BOTH_RANDOM);
 				}
 				((CardLayout) getContentPane().getLayout()).show(getContentPane(), "Submenu");
 			}
@@ -58,20 +57,22 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 
 				switch (command) {
 				case BACK:
-					rMode = null;
+					selectedSettings.setRobotMode(null);
 					((CardLayout) getContentPane().getLayout()).show(getContentPane(), "Main Menu");
 					return;
 
 				case RANDOM_EXIT:
-					eMode = ExitMode.RANDOM;
+					selectedSettings.setExitMode(ExitMode.RANDOM);
 					break;
 				case WORST_CASE:
-					eMode = ExitMode.WORST_CASE;
+					selectedSettings.setExitMode(ExitMode.WORST_CASE);
+					break;
 				}
 				// TODO: Signal to main control that choices are made
 			}
 		};
-		// TODO: Attach listeners to submenu
+		subMenu.addSelectionListener(subListener);
+		subMenu.addExitListener(this);
 	}
 
 	@Override
