@@ -3,6 +3,7 @@ package robotevac;
 public class Robot {
 	private EvacPoint 	location;
 	private boolean 	exited;
+	private double		distance;
 	
 	public Robot(double x, double y) {
 		location = new EvacPoint(x, y);
@@ -18,12 +19,24 @@ public class Robot {
 		return location;
 	}
 	
+	public double getDistance() {
+		return distance;
+	}
+	
 	public void moveTo(double newX, double newY) {
 		location = new EvacPoint(newX, newY);
 	}
 	
 	public void moveTo(EvacPoint l) {
 		location = l;
+	}
+	
+	public void move() {
+		
+	}
+	
+	public void moveToCircumference(EvacPoint p) {
+		
 	}
 	
 	public void exit() {

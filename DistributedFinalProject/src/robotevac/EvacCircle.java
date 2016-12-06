@@ -5,8 +5,8 @@ import static robotevac.EvacPoint.EPSILON;
 import java.util.Random;
 
 public class EvacCircle {
-	private EvacPoint 	exit;
-	private int radius = 1;
+	private EvacPoint 			exit;
+	private static final int 	RADIUS = 1;
 
 	public EvacCircle(double ex, double ey) {
 		exit = new EvacPoint(ex, ey);
@@ -24,8 +24,8 @@ public class EvacCircle {
 		return exit;
 	}
 
-	public double getRadius() {
-		return radius;
+	public static double getRadius() {
+		return RADIUS;
 	}
 
 	public boolean isExit(EvacPoint e) {
@@ -36,26 +36,26 @@ public class EvacCircle {
 		return exit.equals(new EvacPoint(x, y));
 	}
 
-	public boolean isInside(EvacPoint p) {
-		return ((p.getX() * p.getX()) + (p.getY() * p.getY()) <= (radius * radius) + EPSILON);
+	public static boolean isInside(EvacPoint p) {
+		return ((p.getX() * p.getX()) + (p.getY() * p.getY()) <= (RADIUS * RADIUS) + EPSILON);
 	}
 
-	public boolean isOnCircumference(EvacPoint p) {
+	public static boolean isOnCircumference(EvacPoint p) {
 		double dist = (p.getX() * p.getX()) + (p.getY() * p.getY());
-		return (dist + EPSILON >= radius * radius && dist - EPSILON <= radius * radius);
+		return (dist + EPSILON >= RADIUS * RADIUS && dist - EPSILON <= RADIUS * RADIUS);
 	}
 
-	public EvacPoint randomPointInside() {
+	public static EvacPoint randomPointInside() {
 		Random r = new Random();
-		double centreDist = Math.sqrt(r.nextDouble()) * radius;
+		double centreDist = Math.sqrt(r.nextDouble()) * RADIUS;
 		double rads = 2 * Math.PI * r.nextDouble();
 		return new EvacPoint(centreDist * Math.sin(rads), centreDist * -Math.cos(rads));
 	}
 
-	public EvacPoint randomPointOnCircumference() {
+	public static EvacPoint randomPointOnCircumference() {
 		Random r = new Random();
 		double rads = 2 * Math.PI * r.nextDouble();
-		return new EvacPoint(radius * Math.sin(rads), radius * -Math.cos(rads));
+		return new EvacPoint(RADIUS * Math.sin(rads), RADIUS * -Math.cos(rads));
 	}
 
 }

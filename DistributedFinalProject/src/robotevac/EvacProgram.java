@@ -22,12 +22,12 @@ public class EvacProgram {
 
 			case ONE_RANDOM:
 				robot1 = new Robot(0, 0);
-				robot2 = new Robot(circle.randomPointInside());
+				robot2 = new Robot(EvacCircle.randomPointInside());
 				break;
 
 			case BOTH_RANDOM:
-				robot1 = new Robot(circle.randomPointInside());
-				robot2 = new Robot(circle.randomPointInside());
+				robot1 = new Robot(EvacCircle.randomPointInside());
+				robot2 = new Robot(EvacCircle.randomPointInside());
 				break;
 		}
 		view.initRobots(robot1, robot2);
@@ -41,8 +41,24 @@ public class EvacProgram {
 				break;
 			}
 			case WORST_CASE: {
-				// TODO make sure exit is on circumference and is worst case
-				circle = new EvacCircle(Math.random(), Math.random());
+				switch (currRobotMode) {
+				case BOTH_CENTER:
+					circle = new EvacCircle(new EvacPoint(Math.sin((2*Math.PI)*3),
+							Math.cos(Math.sin((2*Math.PI)*3))));
+					break;
+
+				case ONE_RANDOM:
+					// TODO find worst case
+					circle = new EvacCircle(new EvacPoint(Math.sin((2*Math.PI)*3),
+							Math.cos(Math.sin((2*Math.PI)*3))));
+					break;
+
+				case BOTH_RANDOM:
+					// TODO find worst case
+					circle = new EvacCircle(new EvacPoint(Math.sin((2*Math.PI)*3),
+							Math.cos(Math.sin((2*Math.PI)*3))));
+					break;
+			}
 				break;
 			}
 		}
@@ -50,9 +66,7 @@ public class EvacProgram {
 	}
 
 	private double runAlgorithm() {
-		// TODO Auto-generated method stub
 		return 0;
-
 	}
 
 	public void run() {
@@ -71,14 +85,15 @@ public class EvacProgram {
 						double sum = 0;
 						for (int i = 0; i < num; i++) {
 							// TODO do we draw each experiment?
-							initCircle(exitMode);
 							initRobots(currRobotMode);
+							initCircle(exitMode);
 							sum += runAlgorithm();
 						}
 						view.showAvgTime(sum / num);
 						break;
 					}
 					case WORST_CASE: {
+						initRobots(currRobotMode);
 						initCircle(exitMode);
 						double time = runAlgorithm();
 						view.showEvac();
