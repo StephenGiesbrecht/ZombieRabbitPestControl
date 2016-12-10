@@ -1,5 +1,5 @@
 package robotevac;
 
 public enum MoveMode {
-	ROTATE, LINE
+	CIRCUMFERENCE, ROTATE, EXIT
 }

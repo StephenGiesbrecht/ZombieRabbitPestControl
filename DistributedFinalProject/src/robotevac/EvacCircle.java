@@ -58,4 +58,11 @@ public class EvacCircle {
 		return new EvacPoint(RADIUS * Math.sin(rads), RADIUS * -Math.cos(rads));
 	}
 
+	public boolean exitBetween(EvacPoint p1, EvacPoint p2) {
+		double angle1 = Math.atan(p1.getX() / p1.getY());
+		double angle2 = Math.atan(p2.getX() / p2.getY());
+		double exitAngle = Math.atan(exit.getX() / exit.getY());
+		return angle1 - EPSILON <= exitAngle && angle2 + EPSILON >= exitAngle;
+	}
+
 }
