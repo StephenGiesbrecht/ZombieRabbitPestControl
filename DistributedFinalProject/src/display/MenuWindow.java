@@ -82,6 +82,7 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 	}
 
 	public void createAndShow() {
+		setTitle("Robot Evacuation Simulation");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Container frame = getContentPane();
 		frame.setLayout(new CardLayout());
@@ -91,6 +92,7 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 		frame.add(subMenu, "Submenu");
 		initListeners();
 		pack();
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 }
