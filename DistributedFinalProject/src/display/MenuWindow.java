@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
-import javax.swing.event.EventListenerList;
 
 import robotevac.ExitMode;
 import robotevac.RobotMode;
@@ -18,7 +17,6 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 	private MainMenuPanel mainMenu;
 	private SubmenuPanel subMenu;
 	private SimulationSettings selectedSettings = new SimulationSettings();
-	protected EventListenerList listenerList = new EventListenerList();
 
 	public MenuWindow() {
 
@@ -73,6 +71,7 @@ public class MenuWindow extends JFrame implements ActionListener, MenuActionComm
 	}
 
 	public SimulationSettings getSimulationSettings() {
+		selectedSettings = new SimulationSettings();
 		while (!selectedSettings.isComplete()) {
 			try {
 				Thread.sleep(250);

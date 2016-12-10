@@ -3,12 +3,12 @@ package robotevac;
 import display.GUIView;
 
 public class MainControl {
-	GUIView view = new GUIView();
-	SimulationSettings settings;
+	private GUIView view = new GUIView();
+	private SimulationSettings settings;
 	private Robot 		robot1;
 	private Robot 		robot2;
 	private EvacCircle 	circle;
-	
+
 	private void initRobots() {
 		switch (settings.getRobotMode()) {
 			case BOTH_CENTER:
@@ -65,12 +65,12 @@ public class MainControl {
 			robot1.move();
 			robot2.move();
 		}
-		
-		
-		
+
+
+
 		return Math.max(robot1.getDistance(), robot2.getDistance());
 	}
-	
+
 	public void run() {
 		while (true) {
 			settings = new SimulationSettings();
