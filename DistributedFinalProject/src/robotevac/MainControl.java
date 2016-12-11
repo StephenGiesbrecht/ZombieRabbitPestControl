@@ -1,7 +1,5 @@
 package robotevac;
 
-import static robotevac.EvacPoint.EPSILON;
-
 import display.GUIView;
 
 public class MainControl {
@@ -105,6 +103,8 @@ public class MainControl {
 			// TODO figure out destination
 			break;
 		}
+		view.startSimulation(robot1, robot2, circle);
+
 		//keep moving the robots until both have exited
 		while (!robot1.atExit() || !robot2.atExit()) {
 			EvacPoint prevLoc1 = robot1.getLocation();
@@ -114,8 +114,12 @@ public class MainControl {
 			MoveMode prevMode1 = robot1.getMode();
 			MoveMode prevMode2 = robot2.getMode();
 			//move the robots
-			if (!robot1.atExit()) robot1.move();
-			if (!robot2.atExit()) robot2.move();
+			if (!robot1.atExit()) {
+				robot1.move();
+			}
+			if (!robot2.atExit()) {
+				robot2.move();
+			}
 			//check if the first robot hit the exit while transitioning between moving to the
 			//circumference and rotating around the circle
 			if (prevMode1.equals(MoveMode.CIRCUMFERENCE)
@@ -214,7 +218,13 @@ public class MainControl {
 				robot1.setMode(MoveMode.EXIT);
 				robot1.moveStraight(d);
 			}
+			view.updateSimulation();
+			try {
+				Thread.sleep(1);
+			} catch (Exception e) {
+			}
 		}
+		view.endSimulation();
 		return Math.max(robot1.getDistance(), robot2.getDistance());
 	}
 

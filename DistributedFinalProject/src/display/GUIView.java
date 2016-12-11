@@ -5,6 +5,8 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.SwingUtilities;
 
+import robotevac.EvacCircle;
+import robotevac.Robot;
 import robotevac.SimulationSettings;
 
 /**
@@ -15,6 +17,7 @@ import robotevac.SimulationSettings;
  *
  */
 public class GUIView {
+	private SimulationWindow simWindow;
 
 	/**
 	 * Get the simulation settings selected from the options menu. The window
@@ -43,6 +46,24 @@ public class GUIView {
 		SimulationSettings settings = menu.getSimulationSettings();
 		menu.dispose();
 		return settings;
+	}
+
+	public void endSimulation() {
+		if (simWindow != null) {
+			simWindow.dispose();
+			simWindow = null;
+		}
+	}
+
+	public void startSimulation(Robot r1, Robot r2, EvacCircle circle) {
+		simWindow = new SimulationWindow(r1, r2, circle);
+		simWindow.createAndShow();
+	}
+
+	public void updateSimulation() {
+		if (simWindow != null) {
+			simWindow.update();
+		}
 	}
 }
 
