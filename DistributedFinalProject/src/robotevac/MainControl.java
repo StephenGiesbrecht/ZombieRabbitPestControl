@@ -41,9 +41,27 @@ public class MainControl {
 				break;
 
 			case ONE_RANDOM:
-				// TODO find worst case
-				circle = new EvacCircle(new EvacPoint(Math.sin((2*Math.PI)/3),
-						Math.cos(Math.sin((2*Math.PI)/3))));
+				double x = robot2.getLocation().getX();
+				double y = robot2.getLocation().getY();
+				double d = Math.sqrt(x * x + y * y);
+				double angle1 = Math.acos(-0.5) - (d / 2);
+				double angle2 = Math.acos(-0.5) + (d / 2);
+				double total1 = 1 + angle1 + 2 * Math.sin(angle1 + (d / 2));
+				double total2 = 1 + angle1 + 2 * Math.sin(angle1 - (d / 2));
+				if (total1 > total2) {
+					circle = new EvacCircle(new EvacPoint(Math.sin(angle1),
+						Math.cos(angle1)));
+					System.out.println("Exit x: " + Math.sin(angle1));
+					System.out.println("Exit y: " + Math.cos(angle1));
+					System.out.println("Worst case time: " + total1);
+				}
+				else {
+					circle = new EvacCircle(new EvacPoint(Math.sin(2 * Math.PI - angle2),
+							Math.cos(2 * Math.PI - angle2)));
+					System.out.println("Exit x: " + Math.sin(angle2));
+					System.out.println("Exit y: " + Math.cos(angle2));
+					System.out.println("Worst case time: " + total2);
+				}
 				break;
 
 			case BOTH_RANDOM:
@@ -63,7 +81,7 @@ public class MainControl {
 			robot2.setDestination(new EvacPoint(0,1));
 			break;
 		case ONE_RANDOM:
-			double angle = Math.atan(robot2.getLocation().getX() / robot2.getLocation().getY());
+			double angle = EvacCircle.getAngle(robot2.getLocation().getX(), robot2.getLocation().getY());
 			robot1.setDestination(new EvacPoint(Math.sin(angle), Math.cos(angle)));
 			robot2.setDestination(new EvacPoint(Math.sin(angle), Math.cos(angle)));
 			break;
@@ -171,7 +189,7 @@ public class MainControl {
 				initCircle();
 				double time = runAlgorithm();
 				// TODO how does view show time?
-				System.out.println("Time for worst case: " + time);
+				System.out.println("Robot's time for worst case: " + time);
 				break;
 			}
 		}
