@@ -58,11 +58,38 @@ public class EvacCircle {
 		return new EvacPoint(RADIUS * Math.sin(rads), RADIUS * -Math.cos(rads));
 	}
 
-	public boolean exitBetween(EvacPoint p1, EvacPoint p2) {
-		double angle1 = Math.atan(p1.getX() / p1.getY());
-		double angle2 = Math.atan(p2.getX() / p2.getY());
-		double exitAngle = Math.atan(exit.getX() / exit.getY());
-		return angle1 - EPSILON <= exitAngle && angle2 + EPSILON >= exitAngle;
+	public boolean exitBetween(EvacPoint p1, EvacPoint p2, Direction d) {
+		double angle1 = getAngle(p1.getX(), p1.getY());
+		double angle2 = getAngle(p2.getX(), p2.getY());
+		double exitAngle = getAngle(exit.getX(), exit.getY());
+		if (d.equals(Direction.CCW)) {
+			if (angle1 - EPSILON < angle2) {
+				angle1 += 2 * Math.PI;
+			}
+			return angle1 + EPSILON >= exitAngle && angle2 - EPSILON <= exitAngle;
+		}
+		else {
+			if (angle2 - EPSILON < angle1) {
+				angle2 += 2 * Math.PI;
+			}
+			return angle1 - EPSILON <= exitAngle && angle2 + EPSILON >= exitAngle;
+		}
+	}
+	
+	public static double getAngle(double deltaX, double deltaY) {
+		if (deltaY - EPSILON <= 0 && deltaY + EPSILON >= 0) {
+			if (deltaX + EPSILON > 0) return Math.PI / 2;
+			else return (3 * Math.PI) / 2;
+		}
+		double angle = Math.atan(deltaX / deltaY);
+		if (angle + EPSILON > 0) {
+			if (deltaY + EPSILON > 0) return angle;
+			else return angle + Math.PI;
+		}
+		else {
+			if (deltaY - EPSILON < 0) return Math.PI + angle;
+			else return 2 * Math.PI + angle;
+		}
 	}
 
 }

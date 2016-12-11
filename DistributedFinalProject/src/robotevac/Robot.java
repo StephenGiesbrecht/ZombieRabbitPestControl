@@ -1,25 +1,30 @@
 package robotevac;
 
+import static robotevac.EvacPoint.EPSILON;
+
 public class Robot {
-	private static final double	SPEED = 0.1;
+	private static final double	SPEED = 0.001;
 	private EvacPoint 			location;
 	private EvacPoint 			destination;
 	private boolean 			exited;
 	private double				distance;
 	private MoveMode			mode;
+	private Direction			direction;
 	
-	public Robot(double x, double y) {
+	public Robot(double x, double y, Direction d) {
 		location = new EvacPoint(x, y);
 		destination = new EvacPoint(0, 0);
 		exited = false;
 		mode = MoveMode.CIRCUMFERENCE;
+		direction = d;
 	}
 	
-	public Robot(EvacPoint l) {
+	public Robot(EvacPoint l, Direction d) {
 		location = l;
 		destination = new EvacPoint(0, 0);
 		exited = false;
 		mode = MoveMode.CIRCUMFERENCE;
+		direction = d;
 	}
 	
 	public EvacPoint getLocation() {
@@ -38,23 +43,27 @@ public class Robot {
 		return mode;
 	}
 	
+	public Direction getDirection() {
+		return direction;
+	}
+	
 	public void move() {
 		switch(mode) {
 		case CIRCUMFERENCE:
-			double deltaX = Math.abs(location.getX() - destination.getX());
-			double deltaY = Math.abs(location.getY() - destination.getY());
-			double angle = Math.atan(deltaX / deltaY);
+			double deltaX = destination.getX() - location.getX();
+			double deltaY = destination.getY() - location.getY();
+			double angle = EvacCircle.getAngle(deltaX, deltaY);
 			double newX = location.getX() + Math.sin(angle) * SPEED;
 			double newY = location.getY() + Math.cos(angle) * SPEED;
 			EvacPoint newLoc = new EvacPoint(newX, newY);
 			if (!EvacCircle.isInside(newLoc)) {
-				deltaX = Math.abs(newLoc.getX() - destination.getX());
-				deltaY = Math.abs(newLoc.getY() - destination.getY()); 
+				deltaX = newLoc.getX() - destination.getX();
+				deltaY = newLoc.getY() - destination.getY(); 
 				double d = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 				distance += SPEED - d;
 				location = destination;
 				mode = MoveMode.ROTATE;
-				move(d);
+				moveRotate(d);
 			}
 			else {
 				location = newLoc;
@@ -62,21 +71,23 @@ public class Robot {
 			}
 			break;
 		case ROTATE:
-			angle = Math.atan(location.getX() / location.getY());
-			angle += SPEED;
+			angle = EvacCircle.getAngle(location.getX(), location.getY());
+			if (direction.equals(Direction.CW)) angle += SPEED;
+			else angle -= SPEED;
+			if (angle - EPSILON < 0) angle = 2 * Math.PI + angle;
 			location = new EvacPoint(Math.sin(angle), Math.cos(angle));
 			distance += SPEED;
 			break;
 		case EXIT:
-			deltaX = Math.abs(location.getX() - destination.getX());
-			deltaY = Math.abs(location.getY() - destination.getY());
-			angle = Math.atan(deltaX / deltaY);
+			deltaX = destination.getX() - location.getX();
+			deltaY = destination.getY() - location.getY();
+			angle = EvacCircle.getAngle(deltaX, deltaY);
 			newX = location.getX() + Math.sin(angle) * SPEED;
 			newY = location.getY() + Math.cos(angle) * SPEED;
 			newLoc = new EvacPoint(newX, newY);
 			if (!EvacCircle.isInside(newLoc)) {
-				deltaX = Math.abs(newLoc.getX() - destination.getX());
-				deltaY = Math.abs(newLoc.getY() - destination.getY()); 
+				deltaX = newLoc.getX() - destination.getX();
+				deltaY = newLoc.getY() - destination.getY(); 
 				double d = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 				distance += SPEED - d;
 				exited = true;
@@ -89,16 +100,30 @@ public class Robot {
 		}
 	}
 	
-	public void move(double d) {
-		double angle = Math.atan(location.getX() / location.getY());
-		angle += d;
+	public void moveRotate(double d) {
+		double angle = EvacCircle.getAngle(location.getX(), location.getY());
+		if (direction.equals(Direction.CW)) angle += d;
+		else angle -= d;
+		if (angle - EPSILON < 0) angle = 2 * Math.PI + angle;
 		location = new EvacPoint(Math.sin(angle), Math.cos(angle));
+		distance += d;
+	}
+	
+	public void moveStraight(double d) {
+		double deltaX = location.getX() - destination.getX();
+		double deltaY = location.getY() - destination.getY();
+		double angle = EvacCircle.getAngle(deltaX, deltaY);
+		double newX = location.getX() + Math.sin(angle) * d;
+		double newY = location.getY() + Math.cos(angle) * d;
+		location = new EvacPoint(newX, newY);
 		distance += d;
 	}
 
 	public void reverse(double d) {
-		double angle = Math.atan(location.getX() / location.getY());
-		angle -= d;
+		double angle = EvacCircle.getAngle(location.getX(), location.getY());
+		if (direction.equals(Direction.CW)) angle -= d;
+		else angle += d;
+		if (angle - EPSILON < 0) angle = 2 * Math.PI + angle;
 		location = new EvacPoint(Math.sin(angle), Math.cos(angle));
 		distance -= d;
 	}
