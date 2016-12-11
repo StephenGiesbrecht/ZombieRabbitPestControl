@@ -51,19 +51,12 @@ public class GUIView {
 	public void endSimulation() {
 		if (simWindow != null) {
 			simWindow.dispose();
-			simWindow = null;
 		}
 	}
 
 	public void startSimulation(Robot r1, Robot r2, EvacCircle circle) {
 		simWindow = new SimulationWindow(r1, r2, circle);
 		simWindow.createAndShow();
-	}
-
-	public void updateSimulation() {
-		if (simWindow != null) {
-			simWindow.update();
-		}
 	}
 }
 

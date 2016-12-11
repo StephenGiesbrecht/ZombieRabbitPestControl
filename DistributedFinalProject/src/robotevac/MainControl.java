@@ -215,7 +215,7 @@ public class MainControl {
 				robot1.setMode(MoveMode.EXIT);
 				robot1.moveStraight(d);
 			}
-			view.updateSimulation();
+			// Delay between movements so that simulation can be rendered
 			try {
 				Thread.sleep(1);
 			} catch (Exception e) {
@@ -264,7 +264,5 @@ public class MainControl {
 	public static void main(String args[]) {
 		MainControl control = new MainControl();
 		control.run();
-		//System.out.println(Math.sin(1));
-		//System.out.println(Math.sin(-1));
 	}
 }

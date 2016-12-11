@@ -34,8 +34,10 @@ public class SimulationWindow extends JFrame {
 		setVisible(true);
 	}
 
-	public void update() {
-		update(getGraphics());
+	@Override
+	public void dispose() {
+		canvas.endSimulation();
+		super.dispose();
 	}
 
 	public static void main(String args[]) {

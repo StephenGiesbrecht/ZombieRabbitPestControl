@@ -3,8 +3,11 @@ package display;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import robotevac.EvacCircle;
@@ -19,6 +22,7 @@ public class SimulationCanvas extends JPanel {
 
 	private EvacCircle circle;
 	private Robot r1, r2;
+	private Timer timer;
 
 	public SimulationCanvas(Robot r1, Robot r2, EvacCircle circle) {
 		this.r1 = r1;
@@ -26,6 +30,18 @@ public class SimulationCanvas extends JPanel {
 		this.circle = circle;
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setPreferredSize(new Dimension(SCALE * 2 + 16, SCALE * 2 + 16));
+		timer = new Timer(10, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				update(getGraphics());
+			}
+		});
+		timer.start();
+
+	}
+
+	public void endSimulation() {
+		timer.stop();
 	}
 
 	@Override
