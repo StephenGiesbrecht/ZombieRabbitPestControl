@@ -78,6 +78,7 @@ public class MainControl {
 			break;
 		}
 	}
+	
 	//finds the closest point to both robots when both robots are placed randomly
 	private EvacPoint findDestination() {
 		//find the angles at which the radius crosses the circumference through
@@ -101,22 +102,34 @@ public class MainControl {
 		//get the angles of the points on the circle
 		double loc1 = EvacCircle.getAngle(p1.getX(), p1.getY());
 		double loc2 = EvacCircle.getAngle(p2.getX(), p2.getY());
-		//if both robots are equidistant from the circumference then the destination
-		//would be halfway between the closest points to the circle for each of them
-		//therefore if we take that distance and multiply it by the ratio between
-		//the distances to the circle, it should give the point where they travel the same
-		//distance to meet
-		double distance = Math.abs(loc1 - loc2) / 2 * ratio;
-		//find which way we need to rotate and rotate our destination appropriately
-		double location;
-		if (loc1 - EPSILON < loc2) {
-			location = loc1 + distance;
+		//make sure we start at the smaller of the two and end at the larger of the two
+		double currLoc = Math.min(loc1, loc2);
+		double endLoc = Math.max(loc1, loc2);
+		//keep track of the best distance and point seen so far
+		double bestMaxDistance = Double.MAX_VALUE;
+		EvacPoint bestP = null;
+		//loop through a bunch of values between the two points
+		while (currLoc - EPSILON < endLoc) {
+			//find the distance from each of the robots to the current spot being checked
+			EvacPoint p = new EvacPoint(Math.sin(currLoc), Math.cos(currLoc));
+			deltaX1 = p.getX() - robot1.getLocation().getX();
+			deltaY1 = p.getY() - robot1.getLocation().getY();
+			d1 = Math.sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1);
+			deltaX2 = p.getX() - robot2.getLocation().getX();
+			deltaY2 = p.getY() - robot2.getLocation().getY();
+			d2 = Math.sqrt(deltaX2 * deltaX2 + deltaY2 * deltaY2);
+			//get the max of the two distances
+			double currMaxDistance = Math.max(d1, d2);
+			//if this max is smaller than the current best max make it the new best max
+			//and make its point the new best point
+			if (currMaxDistance - EPSILON < bestMaxDistance) {
+				bestMaxDistance = currMaxDistance;
+				bestP = p;
+			}
+			//increment the current location to check a new location
+			currLoc += 0.01;
 		}
-		else {
-			location = loc1 - distance;
-		}
-		//find what point that would be and make it the destination
-		return new EvacPoint(Math.sin(location), Math.cos(location));
+		return bestP;
 	}
 
 	//the main loop that makes the robots move along the path to the exit
