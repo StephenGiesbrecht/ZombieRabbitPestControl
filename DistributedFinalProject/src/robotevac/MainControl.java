@@ -170,7 +170,8 @@ public class MainControl {
 				}
 			}
 			//check if the first robot hit the exit while rotating around the circle
-			if (robot1.getMode().equals(MoveMode.ROTATE)
+			if (!prevMode1.equals(MoveMode.CIRCUMFERENCE)
+					&& robot1.getMode().equals(MoveMode.ROTATE)
 					&& circle.exitBetween(
 							prevLoc1, robot1.getLocation(), robot1.getDirection())) {
 				//find the distance that the first robot overshot the exit by
@@ -193,7 +194,8 @@ public class MainControl {
 				robot2.moveStraight(d);
 			}
 			//check if the second robot hit the exit while rotating around the circle
-			else if (robot2.getMode().equals(MoveMode.ROTATE)
+			else if (!prevMode2.equals(MoveMode.CIRCUMFERENCE)
+					&& robot2.getMode().equals(MoveMode.ROTATE)
 					&& circle.exitBetween(
 							prevLoc2, robot2.getLocation(), robot2.getDirection())) {
 				//find the distance that the first robot overshot the exit by
@@ -217,7 +219,7 @@ public class MainControl {
 			}
 			// Delay between movements so that simulation can be rendered
 			try {
-				Thread.sleep(1);
+				Thread.sleep(2);
 			} catch (Exception e) {
 			}
 		}

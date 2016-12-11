@@ -59,9 +59,15 @@ public class EvacCircle {
 	}
 
 	public boolean exitBetween(EvacPoint p1, EvacPoint p2, Direction d) {
+		if (p1.equals(p2)) {
+			return p1.equals(exit);
+		}
 		double angle1 = getAngle(p1.getX(), p1.getY());
 		double angle2 = getAngle(p2.getX(), p2.getY());
 		double exitAngle = getAngle(exit.getX(), exit.getY());
+		if (angle1 - EPSILON <= angle2 && angle1 + EPSILON >= angle2 ) {
+			
+		}
 		if (d.equals(Direction.CCW)) {
 			if (angle1 - EPSILON < angle2) {
 				angle1 += 2 * Math.PI;

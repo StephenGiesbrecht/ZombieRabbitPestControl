@@ -77,6 +77,13 @@ public class Robot {
 				//rotate around the circle by the overshoot distance
 				moveRotate(d);
 			}
+			//otherwise if our new location is already on the circumference switch to
+			//rotate mode, set our location to destination add SPEED to our total distance
+			else if (EvacCircle.isOnCircumference(newLoc)) {
+				location = destination;
+				mode = MoveMode.ROTATE;
+				distance += SPEED;
+			}
 			else {
 				//we haven't hit our destination yet so our location just becomes the new
 				//location and we add SPEED to our total distance
