@@ -60,19 +60,38 @@ public class MainControl {
 				if (total1 > total2) {
 					circle = new EvacCircle(new EvacPoint(Math.sin(startingAngle + angle1),
 							Math.cos(startingAngle + angle1)));
-					System.out.println("Worst case time1: " + total1);
+					System.out.println("One random worst case time 1: " + total1);
 				}
 				else {
 					circle = new EvacCircle(new EvacPoint(Math.sin(2 * Math.PI + startingAngle - angle2),
 							Math.cos(2 * Math.PI + startingAngle - angle2)));
-					System.out.println("Worst case time2: " + total2);
+					System.out.println("One random worst case time 2: " + total2);
 				}
 				break;
 			//if both robots are random also need to find worst case
 			case BOTH_RANDOM:
-				// TODO find worst case
-				circle = new EvacCircle(new EvacPoint(Math.sin((2*Math.PI)/3),
-						Math.cos((2*Math.PI)/3)));
+				EvacPoint destination = findDestination();
+				double deltaX = destination.getX() - robot1.getLocation().getX();
+				double deltaY = destination.getY() - robot1.getLocation().getY();
+				double d1 = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+				deltaX = destination.getX() - robot2.getLocation().getX();
+				deltaY = destination.getY() - robot2.getLocation().getY();
+				double d2 = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+				double theta1 = Math.acos(-0.5) - (Math.abs(d1 - d2) / 2);
+				double theta2 = Math.acos(-0.5) + (Math.abs(d1 - d2) / 2);
+				double t1 = d1 + theta1 + 2 * Math.sin(theta1 + (Math.abs(d1 - d2) / 2));
+				double t2 = d2 + theta2 + 2 * Math.sin(theta2 - (Math.abs(d1 - d2) / 2));
+				double destAngle = EvacCircle.getAngle(destination.getX(), destination.getY());
+				if (t1 > t2) {
+					circle = new EvacCircle(new EvacPoint(Math.sin(destAngle + theta1),
+							Math.cos(destAngle + theta1)));
+					System.out.println("Both random worst case time 1: " + t1);
+				}
+				else {
+					circle = new EvacCircle(new EvacPoint(Math.sin(2 * Math.PI + destAngle - theta2),
+							Math.cos(2 * Math.PI + destAngle - theta2)));
+					System.out.println("Both random worst case time 2: " + t2);
+				}
 				break;
 			}
 			break;
