@@ -54,7 +54,7 @@ public class MainControl {
 				double angle1 = Math.acos(-0.5) - (d / 2);
 				double angle2 = Math.acos(-0.5) + (d / 2);
 				double total1 = 1 + angle1 + 2 * Math.sin(angle1 + (d / 2));
-				double total2 = 1 + angle2 + 2 * Math.sin(angle2 - (d / 2));
+				double total2 = (1.0 - d) + angle2 + 2 * Math.sin(angle2 - (d / 2));
 				double startingAngle = EvacCircle.getAngle(robot2.getLocation().getX(), robot2.getLocation().getY());
 				if (total1 > total2) {
 					circle = new EvacCircle(new EvacPoint(Math.sin(startingAngle + angle1),
