@@ -30,6 +30,7 @@ public class SimulationWindow extends JFrame {
 		borderPanel.add(canvas);
 		add(borderPanel);
 		pack();
+		canvas.init();
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
