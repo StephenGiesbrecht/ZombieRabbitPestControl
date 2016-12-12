@@ -152,7 +152,7 @@ public class MainControl {
 	}
 
 	//the main loop that makes the robots move along the path to the exit
-	private double runAlgorithm() {
+	private double runAlgorithm(boolean draw) {
 		//figure out where the robots need to go to on the circumference
 		switch (settings.getRobotMode()) {
 		//if they're both in the center any point will do
@@ -176,7 +176,7 @@ public class MainControl {
 			robot2.setDestination(destination);
 			break;
 		}
-		view.startSimulation(robot1, robot2, circle);
+		if (draw) view.startSimulation(robot1, robot2, circle);
 
 		//keep moving the robots until both have exited
 		while (!robot1.atExit() || !robot2.atExit()) {
@@ -294,12 +294,14 @@ public class MainControl {
 				robot1.moveStraight(d);
 			}
 			// Delay between movements so that simulation can be rendered
-			try {
+			if (draw) {
+				try {
 				Thread.sleep(2);
-			} catch (Exception e) {
+				} catch (Exception e) {
+				}
 			}
 		}
-		view.endSimulation();
+		if (draw) view.endSimulation();
 		return Math.max(robot1.getDistance(), robot2.getDistance());
 	}
 
@@ -316,11 +318,14 @@ public class MainControl {
 				//reinitialize robots and circle each time, then give average time
 				int num = settings.getNumberOfTests();
 				double sum = 0;
-				for (int i = 0; i < num; i++) {
+				initRobots();
+				initCircle();
+				sum += runAlgorithm(true);
+				for (int i = 1; i < num; i++) {
 					// TODO do we draw each experiment?
 					initRobots();
 					initCircle();
-					sum += runAlgorithm();
+					sum += runAlgorithm(false);
 				}
 				// TODO how does view show time?
 				System.out.println("Average time: " + sum / num);
@@ -330,7 +335,7 @@ public class MainControl {
 				//one test and give that worst case time
 				initRobots();
 				initCircle();
-				double time = runAlgorithm();
+				double time = runAlgorithm(true);
 				// TODO how does view show time?
 				System.out.println("Robot's time for worst case: " + time);
 				break;
