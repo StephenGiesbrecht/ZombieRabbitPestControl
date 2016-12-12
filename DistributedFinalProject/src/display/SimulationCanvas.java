@@ -4,11 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import robotevac.EvacCircle;
@@ -24,7 +21,6 @@ public class SimulationCanvas extends JPanel {
 
 	private EvacCircle circle;
 	private Robot r1, r2;
-	private Timer timer;
 
 	private Graphics bufferGraphics;
 	private Image buffer;
@@ -36,32 +32,10 @@ public class SimulationCanvas extends JPanel {
 		setPreferredSize(size);
 	}
 
-	public void endSimulation() {
-		timer.stop();
-	}
-
 	public void init() {
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		buffer = createImage(size.width, size.height);
 		bufferGraphics = buffer.getGraphics();
-
-		timer = new Timer(10, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				update(getGraphics());
-			}
-		});
-		timer.start();
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		bufferGraphics.clearRect(0, 0, size.width, size.height);
-		bufferGraphics.drawOval(8, 8, SCALE * 2, SCALE * 2);
-		drawExit(circle, Color.GREEN, bufferGraphics);
-		drawRobot(r1, Color.RED, bufferGraphics);
-		drawRobot(r2, Color.BLUE, bufferGraphics);
-		g.drawImage(buffer, 0, 0, this);
 	}
 
 	private void drawExit(EvacCircle circle, Color c, Graphics g) {
@@ -84,11 +58,25 @@ public class SimulationCanvas extends JPanel {
 				10);
 	}
 
+	@Override
+	public void paint(Graphics g) {
+		bufferGraphics.clearRect(0, 0, size.width, size.height);
+		bufferGraphics.drawOval(8, 8, SCALE * 2, SCALE * 2);
+		drawExit(circle, Color.GREEN, bufferGraphics);
+		drawRobot(r1, Color.RED, bufferGraphics);
+		drawRobot(r2, Color.BLUE, bufferGraphics);
+		g.drawImage(buffer, 0, 0, this);
+	}
+
 	private int scaleXCoordinate(double coord) {
 		return (int) Math.round(CENTERX + coord * SCALE);
 	}
 
 	private int scaleYCoordinate(double coord) {
 		return (int) Math.round(CENTERY - coord * SCALE);
+	}
+
+	public void update() {
+		paint(getGraphics());
 	}
 }

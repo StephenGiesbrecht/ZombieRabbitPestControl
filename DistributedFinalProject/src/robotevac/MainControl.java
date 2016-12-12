@@ -1,7 +1,8 @@
 package robotevac;
 
-import display.GUIView;
 import static robotevac.EvacPoint.EPSILON;
+
+import display.GUIView;
 
 public class MainControl {
 	private GUIView view = new GUIView();
@@ -97,7 +98,7 @@ public class MainControl {
 			break;
 		}
 	}
-	
+
 	//finds the closest point to both robots when both robots are placed randomly
 	private EvacPoint findDestination() {
 		//find the angles at which the radius crosses the circumference through
@@ -116,8 +117,7 @@ public class MainControl {
 		double deltaX2 = p2.getX() - robot2.getLocation().getX();
 		double deltaY2 = p2.getY() - robot2.getLocation().getY();
 		double d2 = Math.sqrt(deltaX2 * deltaX2 + deltaY2 * deltaY2);
-		//get the ratio of those distances
-		double ratio = d1 / d2;
+
 		//get the angles of the points on the circle
 		double loc1 = EvacCircle.getAngle(p1.getX(), p1.getY());
 		double loc2 = EvacCircle.getAngle(p2.getX(), p2.getY());

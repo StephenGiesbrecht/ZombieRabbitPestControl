@@ -75,6 +75,8 @@ public class MenuWindow implements ActionListener, MenuActionCommands {
 					while (selectedSettings.getNumberOfTests() <= 0) {
 						String response = JOptionPane
 								.showInputDialog("How many tests should be run to get an average?");
+						if (response == null || response.equals(""))
+							return;
 						try {
 							selectedSettings.setNumberOfTests(Integer.parseInt(response));
 						} catch (NumberFormatException ex) {

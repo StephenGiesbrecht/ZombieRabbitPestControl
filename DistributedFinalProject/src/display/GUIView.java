@@ -18,6 +18,7 @@ import robotevac.SimulationSettings;
  */
 public class GUIView {
 	private SimulationWindow simWindow;
+	private boolean simRunning;
 
 	/**
 	 * Get the simulation settings selected from the options menu. The window
@@ -50,13 +51,21 @@ public class GUIView {
 
 	public void endSimulation() {
 		if (simWindow != null) {
+			while (simRunning);
 			simWindow.dispose();
 		}
 	}
 
 	public void startSimulation(Robot r1, Robot r2, EvacCircle circle) {
+		simRunning = true;
 		simWindow = new SimulationWindow(r1, r2, circle);
 		simWindow.createAndShow();
+		simWindow.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				simRunning = false;
+			}
+		});
 	}
 }
 
