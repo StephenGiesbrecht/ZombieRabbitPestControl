@@ -1,5 +1,10 @@
 package robotevac;
 
+/**
+ * This class contains the various settings MainControl requires to properly set up the
+ * various trials. Initialized by GUIView who then gives it to MainControl.
+ *
+ */
 public class SimulationSettings {
 	private RobotMode rMode;
 	private ExitMode eMode;

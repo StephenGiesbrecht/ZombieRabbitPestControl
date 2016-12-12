@@ -1,5 +1,9 @@
 package robotevac;
 
+/**
+ * This class is a simple representation of a point on a grid
+ *
+ */
 public class EvacPoint {
 	public static final double EPSILON = 0.000001;
 	private double x;

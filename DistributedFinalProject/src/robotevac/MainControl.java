@@ -7,6 +7,12 @@ import java.util.List;
 
 import display.GUIView;
 
+/**
+ * This class controls the entire program. It contains the main to run the program, and
+ * tells the view when to draw specific stages of the program. Also handles some of the robot
+ * movement logic.
+ *
+ */
 public class MainControl {
 	private GUIView view = new GUIView();
 	private SimulationSettings settings;

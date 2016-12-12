@@ -2,6 +2,12 @@ package robotevac;
 
 import static robotevac.EvacPoint.EPSILON;
 
+/**
+ * This class is used to represent the robots as they attempt to find the exit. Contains
+ * all the necessary robot attributes, and handles most of the movement algorithm, with
+ * MainControl handling some.
+ *
+ */
 public class Robot {
 	private static final double	SPEED = 0.001;
 	private EvacPoint 			location;
