@@ -50,6 +50,10 @@ public class GUIView {
 		return settings;
 	}
 
+	/**
+	 * Ensure that there are no simulations currently being displayed. This call
+	 * blocks until all open simulations have been closed
+	 */
 	public void endSimulation() {
 		if (simWindow != null) {
 			while (simRunning) {
@@ -62,10 +66,22 @@ public class GUIView {
 		}
 	}
 
+	/**
+	 * @see SimulationWindow#setResultsFromBackgroundTests(double, int)
+	 */
 	public void setResultsFromBackgroundTests(double sum, int count) {
 		simWindow.setResultsFromBackgroundTests(sum, count);
 	}
 
+	/**
+	 * Start a visual evacuation simulation to display to the user
+	 *
+	 * @param r1 The first robot in the evacuation
+	 * @param r2 The second robot in the evacuation
+	 * @param circle The circle being evacuated from
+	 * @param mode The type of simulation being run,
+	 * either {@link ExitMode#RANDOM} or {@link ExitMode#WORST_CASE}
+	 */
 	public void startSimulation(Robot r1, Robot r2, EvacCircle circle, ExitMode mode) {
 		simRunning = true;
 		simWindow = new SimulationWindow(r1, r2, circle, mode);
@@ -85,5 +101,3 @@ public class GUIView {
 		});
 	}
 }
-
-

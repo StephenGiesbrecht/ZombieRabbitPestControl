@@ -11,6 +11,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * This class contains the main options menu where the robot starting locations
+ * can be selected
+ *
+ */
 @SuppressWarnings("serial")
 public class MainMenuPanel extends JPanel implements MenuActionCommands {
 
@@ -20,6 +25,7 @@ public class MainMenuPanel extends JPanel implements MenuActionCommands {
 		initComponents();
 	}
 
+	// Create and position the components
 	private void initComponents() {
 
 		Insets margins = new Insets(5, 10, 5, 10);
@@ -57,10 +63,20 @@ public class MainMenuPanel extends JPanel implements MenuActionCommands {
 
 	}
 
+	/**
+	 * Attach a given action listener to the exit button on the menu
+	 *
+	 * @param l The ActionListener to attach
+	 */
 	public void addExitListener(ActionListener l) {
 		exit.addActionListener(l);
 	}
 
+	/**
+	 * Attach a given action listener to the three mode selection buttons on the menu
+	 * 
+	 * @param l The ActionListener to attach
+	 */
 	public void addSelectionListener(ActionListener l) {
 		bothCenter.addActionListener(l);
 		oneRandom.addActionListener(l);

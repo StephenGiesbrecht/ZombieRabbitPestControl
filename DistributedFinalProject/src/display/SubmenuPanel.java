@@ -11,6 +11,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * This class contains the secondary options menu where the type of simulation
+ * to run (randomized or worst case) can be selected
+ *
+ */
 @SuppressWarnings("serial")
 public class SubmenuPanel extends JPanel implements MenuActionCommands {
 	private JButton random, worst, back, exit;
@@ -19,6 +24,7 @@ public class SubmenuPanel extends JPanel implements MenuActionCommands {
 		initComponents();
 	}
 
+	// Create and position the components
 	private void initComponents() {
 
 		Insets margins = new Insets(5, 18, 5, 18);
@@ -55,11 +61,20 @@ public class SubmenuPanel extends JPanel implements MenuActionCommands {
 		add(buttonPanel, BorderLayout.SOUTH);
 
 	}
-
+	/**
+	 * Attach a given action listener to the exit button on the menu
+	 *
+	 * @param l The ActionListener to attach
+	 */
 	public void addExitListener(ActionListener l) {
 		exit.addActionListener(l);
 	}
 
+	/**
+	 * Attach a given action listener to the three selection buttons on the menu
+	 * 
+	 * @param l The ActionListener to attach
+	 */
 	public void addSelectionListener(ActionListener l) {
 		random.addActionListener(l);
 		worst.addActionListener(l);

@@ -16,6 +16,11 @@ import robotevac.EvacCircle;
 import robotevac.ExitMode;
 import robotevac.Robot;
 
+/**
+ * This class is the top level frame that displays the active evacuation
+ * simulation to the user
+ *
+ */
 @SuppressWarnings("serial")
 public class SimulationWindow extends JFrame implements ActionListener {
 	private EvacCircle circle;
@@ -35,11 +40,16 @@ public class SimulationWindow extends JFrame implements ActionListener {
 		this.mode = mode;
 	}
 
+	// This listener is attached to the finish button and closes the window when
+	// the user is done viewing the simulation
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		dispose();
 	}
 
+	/**
+	 * Populate the simulation window and display it
+	 */
 	public void createAndShow() {
 		setTitle("Robot Evacuation");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -84,19 +94,28 @@ public class SimulationWindow extends JFrame implements ActionListener {
 		canvas.init();
 		setLocationRelativeTo(null);
 
+		// Create a timer responsible for updating the rendering of the
+		// simulation
 		timer = new Timer(10, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				canvas.update();
+				// Redraw current positions on canvas
+				canvas.repaint();
 
+				// Show total time taken once simulation has concluded
 				if (r1.atExit() && r2.atExit()) {
 						timeLabel.setText(
 								String.format("Time required for this evacuation: %1$.4f",
 										Math.max(r1.getDistance(), r2.getDistance())));
+
+					// For only one trial, stop updating immediately
 					if (mode == ExitMode.WORST_CASE) {
 						timer.stop();
 						finish.setEnabled(true);
 					}
+
+					// If doing set of random trials, wait for average result
+					// and display that before stopping updates
 					else {
 						if (resultCount != 0) {
 							double avgTime = (resultSum + Math.max(r1.getDistance(), r2.getDistance()))
@@ -114,6 +133,13 @@ public class SimulationWindow extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
+	/**
+	 * Set the result of background randomized tests so that they can be
+	 * displayed to the user along with results of active simulation
+	 * 
+	 * @param sum The sum of the results from all the background tests
+	 * @param count The number of background tests that were run
+	 */
 	public void setResultsFromBackgroundTests(double sum, int count) {
 		resultSum = sum;
 		resultCount = count;

@@ -11,6 +11,11 @@ import javax.swing.border.EmptyBorder;
 import robotevac.EvacCircle;
 import robotevac.Robot;
 
+/**
+ * This class is a panel that contains the rendered representation of the model
+ * objects in the simulation. It uses a double buffer for smooth updates
+ *
+ */
 @SuppressWarnings("serial")
 public class SimulationCanvas extends JPanel {
 
@@ -32,12 +37,20 @@ public class SimulationCanvas extends JPanel {
 		setPreferredSize(size);
 	}
 
+	/**
+	 * Create the double buffer used for smooth rendering of the simulation.
+	 * <p>
+	 * <b>Warning:</b> This must be called after this component is made
+	 * displayable
+	 * </p>
+	 */
 	public void init() {
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 		buffer = createImage(size.width, size.height);
 		bufferGraphics = buffer.getGraphics();
 	}
 
+	// Draw the exit with the given graphics object
 	private void drawExit(EvacCircle circle, Color c, Graphics g) {
 		g.setColor(c);
 		g.fillRect(scaleXCoordinate(circle.getExit().getX()) - 5, scaleYCoordinate(circle.getExit().getY()) - 5, 10,
@@ -47,6 +60,7 @@ public class SimulationCanvas extends JPanel {
 				10);
 	}
 
+	// Draw a robot with the given graphics object
 	private void drawRobot(Robot r, Color c, Graphics g) {
 		if (r.atExit())
 			return;
@@ -68,15 +82,15 @@ public class SimulationCanvas extends JPanel {
 		g.drawImage(buffer, 0, 0, this);
 	}
 
+	// Convert a cartesian x coordinate used by the model into a pixel
+	// coordinate for rendering
 	private int scaleXCoordinate(double coord) {
 		return (int) Math.round(CENTERX + coord * SCALE);
 	}
 
+	// Convert a cartesian y coordinate used by the model into a pixel
+	// coordinate for rendering
 	private int scaleYCoordinate(double coord) {
 		return (int) Math.round(CENTERY - coord * SCALE);
-	}
-
-	public void update() {
-		paint(getGraphics());
 	}
 }
