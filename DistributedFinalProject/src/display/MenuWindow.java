@@ -74,7 +74,7 @@ public class MenuWindow implements ActionListener, MenuActionCommands {
 				case RANDOM_EXIT:
 					while (selectedSettings.getNumberOfTests() <= 0) {
 						String response = JOptionPane
-								.showInputDialog("How many tests should be run to get an average?");
+								.showInputDialog( "How many tests should be run to get an average? \n One trial will be displayed while the set is running and the final average of all trials will be shown");
 						if (response == null || response.equals(""))
 							return;
 						try {
