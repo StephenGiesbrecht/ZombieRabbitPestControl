@@ -18,7 +18,7 @@ import robotevac.SimulationSettings;
  */
 public class GUIView {
 	private SimulationWindow simWindow;
-	private boolean simRunning;
+	private volatile boolean simRunning;
 
 	/**
 	 * Get the simulation settings selected from the options menu. The window

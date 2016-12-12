@@ -335,14 +335,14 @@ public class MainControl {
 				Thread t = new Thread(new Runnable() {
 					@Override
 					public void run() {
-						double sum = 0;
 						for (int i = 1; i < num; i++) {
 							List<Robot> robots = initRobots();
 							EvacCircle circle = initCircle(robots.get(0), robots.get(1));
 							sum += runAlgorithm(robots.get(0), robots.get(1), circle, false);
-							setSum(sum);
+							System.out.println(i);
 						}
 					}
+
 				});
 
 				t.start();
