@@ -360,9 +360,7 @@ public class MainControl {
 				//one test and give that worst case time
 				List<Robot> robots = initRobots();
 				EvacCircle circle = initCircle(robots.get(0), robots.get(1));
-				double time = runAlgorithm(robots.get(0), robots.get(1), circle, true);
-				// TODO how does view show time?
-				System.out.println("Robot's time for worst case: " + time);
+				runAlgorithm(robots.get(0), robots.get(1), circle, true);
 				break;
 			}
 		}
