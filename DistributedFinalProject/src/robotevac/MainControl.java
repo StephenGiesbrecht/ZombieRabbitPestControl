@@ -65,12 +65,10 @@ public class MainControl {
 				if (total1 > total2) {
 					circle = new EvacCircle(new EvacPoint(Math.sin(startingAngle + angle1),
 							Math.cos(startingAngle + angle1)));
-					System.out.println("One random worst case time 1: " + total1);
 				}
 				else {
 					circle = new EvacCircle(new EvacPoint(Math.sin(2 * Math.PI + startingAngle - angle2),
 							Math.cos(2 * Math.PI + startingAngle - angle2)));
-					System.out.println("One random worst case time 2: " + total2);
 				}
 				break;
 			//if both robots are random also need to find worst case
@@ -90,12 +88,10 @@ public class MainControl {
 				if (t1 > t2) {
 					circle = new EvacCircle(new EvacPoint(Math.sin(destAngle + theta1),
 							Math.cos(destAngle + theta1)));
-					System.out.println("Both random worst case time 1: " + t1);
 				}
 				else {
 					circle = new EvacCircle(new EvacPoint(Math.sin(2 * Math.PI + destAngle - theta2),
 							Math.cos(2 * Math.PI + destAngle - theta2)));
-					System.out.println("Both random worst case time 2: " + t2);
 				}
 				break;
 			}
@@ -156,10 +152,6 @@ public class MainControl {
 		return bestP;
 	}
 
-	public void setSum(double d) {
-		sum = d;
-	}
-
 	//the main loop that makes the robots move along the path to the exit
 	private double runAlgorithm(Robot robot1, Robot robot2, EvacCircle circle, boolean draw) {
 		//figure out where the robots need to go to on the circumference
@@ -186,7 +178,7 @@ public class MainControl {
 			break;
 		}
 		if (draw) {
-			view.startSimulation(robot1, robot2, circle);
+			view.startSimulation(robot1, robot2, circle, settings.getExitMode());
 		}
 
 		//keep moving the robots until both have exited
@@ -339,8 +331,8 @@ public class MainControl {
 							List<Robot> robots = initRobots();
 							EvacCircle circle = initCircle(robots.get(0), robots.get(1));
 							sum += runAlgorithm(robots.get(0), robots.get(1), circle, false);
-							System.out.println(i);
 						}
+						view.setResultsFromBackgroundTests(sum, num);
 					}
 
 				});
@@ -349,15 +341,13 @@ public class MainControl {
 				List<Robot> drawRobots = initRobots();
 				EvacCircle drawCircle = initCircle(drawRobots.get(0), drawRobots.get(1));
 
-				double drawSum = runAlgorithm(drawRobots.get(0), drawRobots.get(1), drawCircle, true);
+				runAlgorithm(drawRobots.get(0), drawRobots.get(1), drawCircle, true);
 
 				try {
 					t.join();
 				} catch (InterruptedException e) {
 				}
 
-				sum += drawSum;
-				System.out.println("Average time: " + sum / num);
 				break;
 			case WORST_CASE:
 				//initialize the robots and circle just once, then run

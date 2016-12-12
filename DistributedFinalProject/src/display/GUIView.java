@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.SwingUtilities;
 
 import robotevac.EvacCircle;
+import robotevac.ExitMode;
 import robotevac.Robot;
 import robotevac.SimulationSettings;
 
@@ -61,10 +62,21 @@ public class GUIView {
 		}
 	}
 
-	public void startSimulation(Robot r1, Robot r2, EvacCircle circle) {
+	public void setResultsFromBackgroundTests(double sum, int count) {
+		simWindow.setResultsFromBackgroundTests(sum, count);
+	}
+
+	public void startSimulation(Robot r1, Robot r2, EvacCircle circle, ExitMode mode) {
 		simRunning = true;
-		simWindow = new SimulationWindow(r1, r2, circle);
-		simWindow.createAndShow();
+		simWindow = new SimulationWindow(r1, r2, circle, mode);
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				simWindow.createAndShow();
+			}
+		});
+
 		simWindow.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
