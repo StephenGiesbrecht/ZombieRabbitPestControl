@@ -326,6 +326,7 @@ public class MainControl {
 					initRobots();
 					initCircle();
 					sum += runAlgorithm(false);
+					System.out.println(i);
 				}
 				// TODO how does view show time?
 				System.out.println("Average time: " + sum / num);

@@ -80,7 +80,7 @@ public class Robot {
 			//otherwise if our new location is already on the circumference switch to
 			//rotate mode, set our location to destination add SPEED to our total distance
 			else if (EvacCircle.isOnCircumference(newLoc)) {
-				location = destination;
+				location = newLoc;
 				mode = MoveMode.ROTATE;
 				distance += SPEED;
 			}
@@ -126,6 +126,13 @@ public class Robot {
 				distance += SPEED - d;
 				//set exited to true as we have found the exit
 				exited = true;
+			}
+			//otherwise if our new location is the exit exit the circle,
+			//set our location to destination add SPEED to our total distance
+			else if (EvacCircle.isOnCircumference(newLoc)) {
+				location = newLoc;
+				exited = true;
+				distance += SPEED;
 			}
 			else {
 				//we haven't hit our destination yet so our location just becomes the new

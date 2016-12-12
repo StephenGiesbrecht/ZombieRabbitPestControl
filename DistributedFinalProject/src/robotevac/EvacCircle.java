@@ -41,8 +41,8 @@ public class EvacCircle {
 	}
 
 	public static boolean isOnCircumference(EvacPoint p) {
-		double dist = (p.getX() * p.getX()) + (p.getY() * p.getY());
-		return (dist + EPSILON >= RADIUS * RADIUS && dist - EPSILON <= RADIUS * RADIUS);
+		double dist = Math.sqrt((p.getX() * p.getX()) + (p.getY() * p.getY()));
+		return (dist + EPSILON >= RADIUS && dist - EPSILON <= RADIUS);
 	}
 
 	public static EvacPoint randomPointInside() {
