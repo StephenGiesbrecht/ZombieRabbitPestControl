@@ -2,39 +2,43 @@ package robotevac;
 
 import static robotevac.EvacPoint.EPSILON;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import display.GUIView;
 
 public class MainControl {
 	private GUIView view = new GUIView();
 	private SimulationSettings settings;
-	private Robot 		robot1;
-	private Robot 		robot2;
-	private EvacCircle 	circle;
+	private double sum = 0;
 
 	//initialize the robots based on robot mode chosen by user
 	//robot1 always goes clockwise while robot2 always goes counter-clockwise
-	private void initRobots() {
+	private List<Robot> initRobots() {
+		List<Robot> robots = new ArrayList<>();
 		switch (settings.getRobotMode()) {
 		//both start in the center
 		case BOTH_CENTER:
-			robot1 = new Robot(0, 0, Direction.CW);
-			robot2 = new Robot(0, 0, Direction.CCW);
+			robots.add(new Robot(0, 0, Direction.CW));
+			robots.add(new Robot(0, 0, Direction.CCW));
 			break;
 		//robot1 starts in the center, robot2 starts at a random spot in the circle
 		case ONE_RANDOM:
-			robot1 = new Robot(0, 0, Direction.CW);
-			robot2 = new Robot(EvacCircle.randomPointInside(), Direction.CCW);
+			robots.add(new Robot(0, 0, Direction.CW));
+			robots.add(new Robot(EvacCircle.randomPointInside(), Direction.CCW));
 			break;
 		//both robots start at random spots in the circle
 		case BOTH_RANDOM:
-			robot1 = new Robot(EvacCircle.randomPointInside(), Direction.CW);
-			robot2 = new Robot(EvacCircle.randomPointInside(), Direction.CCW);
+			robots.add(new Robot(EvacCircle.randomPointInside(), Direction.CW));
+			robots.add(new Robot(EvacCircle.randomPointInside(), Direction.CCW));
 			break;
 		}
+		return robots;
 	}
 
 	//initialize the circle based on the user's choice for exit
-	private void initCircle() {
+	private EvacCircle initCircle(Robot robot1, Robot robot2) {
+		EvacCircle circle = new EvacCircle();
 		switch (settings.getExitMode()) {
 		//default constructor will give a circle with a random exit, so use that
 		case RANDOM:
@@ -71,7 +75,7 @@ public class MainControl {
 				break;
 			//if both robots are random also need to find worst case
 			case BOTH_RANDOM:
-				EvacPoint destination = findDestination();
+				EvacPoint destination = findDestination(robot1, robot2);
 				double deltaX = destination.getX() - robot1.getLocation().getX();
 				double deltaY = destination.getY() - robot1.getLocation().getY();
 				double d1 = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -97,10 +101,11 @@ public class MainControl {
 			}
 			break;
 		}
+		return circle;
 	}
 
 	//finds the closest point to both robots when both robots are placed randomly
-	private EvacPoint findDestination() {
+	private EvacPoint findDestination(Robot robot1, Robot robot2) {
 		//find the angles at which the radius crosses the circumference through
 		//the points
 		double angle1 = EvacCircle.getAngle(robot1.getLocation().getX(),
@@ -151,8 +156,12 @@ public class MainControl {
 		return bestP;
 	}
 
+	public void setSum(double d) {
+		sum = d;
+	}
+
 	//the main loop that makes the robots move along the path to the exit
-	private double runAlgorithm(boolean draw) {
+	private double runAlgorithm(Robot robot1, Robot robot2, EvacCircle circle, boolean draw) {
 		//figure out where the robots need to go to on the circumference
 		switch (settings.getRobotMode()) {
 		//if they're both in the center any point will do
@@ -171,12 +180,14 @@ public class MainControl {
 		//if both are random must find the point on the circumference such that the maximum
 		//of the two robots' distances to said point is minimized
 		case BOTH_RANDOM:
-			EvacPoint destination = findDestination();
+			EvacPoint destination = findDestination(robot1, robot2);
 			robot1.setDestination(destination);
 			robot2.setDestination(destination);
 			break;
 		}
-		if (draw) view.startSimulation(robot1, robot2, circle);
+		if (draw) {
+			view.startSimulation(robot1, robot2, circle);
+		}
 
 		//keep moving the robots until both have exited
 		while (!robot1.atExit() || !robot2.atExit()) {
@@ -301,7 +312,9 @@ public class MainControl {
 				}
 			}
 		}
-		if (draw) view.endSimulation();
+		if (draw) {
+			view.endSimulation();
+		}
 		return Math.max(robot1.getDistance(), robot2.getDistance());
 	}
 
@@ -317,26 +330,41 @@ public class MainControl {
 				//get number of tests given by user, run that many tests
 				//reinitialize robots and circle each time, then give average time
 				int num = settings.getNumberOfTests();
-				double sum = 0;
-				initRobots();
-				initCircle();
-				sum += runAlgorithm(true);
-				for (int i = 1; i < num; i++) {
-					// TODO do we draw each experiment?
-					initRobots();
-					initCircle();
-					sum += runAlgorithm(false);
-					System.out.println(i);
+				sum = 0;
+
+				Thread t = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						double sum = 0;
+						for (int i = 1; i < num; i++) {
+							List<Robot> robots = initRobots();
+							EvacCircle circle = initCircle(robots.get(0), robots.get(1));
+							sum += runAlgorithm(robots.get(0), robots.get(1), circle, false);
+							setSum(sum);
+						}
+					}
+				});
+
+				t.start();
+				List<Robot> drawRobots = initRobots();
+				EvacCircle drawCircle = initCircle(drawRobots.get(0), drawRobots.get(1));
+
+				double drawSum = runAlgorithm(drawRobots.get(0), drawRobots.get(1), drawCircle, true);
+
+				try {
+					t.join();
+				} catch (InterruptedException e) {
 				}
-				// TODO how does view show time?
+
+				sum += drawSum;
 				System.out.println("Average time: " + sum / num);
 				break;
 			case WORST_CASE:
 				//initialize the robots and circle just once, then run
 				//one test and give that worst case time
-				initRobots();
-				initCircle();
-				double time = runAlgorithm(true);
+				List<Robot> robots = initRobots();
+				EvacCircle circle = initCircle(robots.get(0), robots.get(1));
+				double time = runAlgorithm(robots.get(0), robots.get(1), circle, true);
 				// TODO how does view show time?
 				System.out.println("Robot's time for worst case: " + time);
 				break;
