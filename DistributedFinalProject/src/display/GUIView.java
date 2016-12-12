@@ -51,8 +51,13 @@ public class GUIView {
 
 	public void endSimulation() {
 		if (simWindow != null) {
-			while (simRunning);
-			simWindow.dispose();
+			while (simRunning) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
+			}
+			simWindow = null;
 		}
 	}
 
